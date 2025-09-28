@@ -21,7 +21,6 @@ from rclpy.time import Time
 # You may add any other imports you may need/want to use below
 # import ...
 
-from utilities import log_values #importing the log values function to pass values to the utilities file
 temp = 0 # variable to help with spiral motion
 
 CIRCLE=0; SPIRAL=1; ACC_LINE=2
@@ -84,7 +83,7 @@ class motion_executioner(Node):
         imu_y_orientation = imu_orientation.y #to record imu y position
 
         imu_angular_velocity=imu_msg.angular_velocity #to record imu angular velocity
-        log_values([imu_angular_velocity.x, imu_angular_velocity.y, imu_angular_velocity.z, timestamp]) # logging the list of message values to be used in utilities.py
+        self.imu_logger.log_values([imu_angular_velocity.x, imu_angular_velocity.y, imu_angular_velocity.z, timestamp]) # logging the list of message values to be used in utilities.py
         
         #print all recorded message values
         print(f'Message Timestamp = {timestamp}')
@@ -101,7 +100,7 @@ class motion_executioner(Node):
         odom_x_pos = odom_msg.pose.pose.position.x #to record odometry x position
         odom_y_pos = odom_msg.pose.pose.position.y #to record odometry y position
 
-        log_values([odom_x_pos, odom_y_pos, odom_orientation, timestamp]) # logging the list of message values to be used in utilities.py
+        self.odom_logger.log_values([odom_x_pos, odom_y_pos, odom_orientation, timestamp]) # logging the list of message values to be used in utilities.py
         
         #print all recorded message values
         print(f'Message Timestamp = {timestamp}')
@@ -117,7 +116,7 @@ class motion_executioner(Node):
         laser_angle_min=laser_msg.angle_min #to record laser minimum angle
         laser_angle_max=laser_msg.angle_max #to record laser maximum angle
 
-        log_values([laser_ranges, laser_angle_min, laser_angle_max, timestamp]) # logging the list of message values to be used in utilities.py
+        self.laser_logger.log_values([laser_ranges, laser_angle_min, laser_angle_max, timestamp]) # logging the list of message values to be used in utilities.py
 
         #print all recorded message values
         print(f'Message Timestamp = {timestamp}')
