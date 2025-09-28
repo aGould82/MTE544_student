@@ -1,4 +1,4 @@
-# Imports  
+# Imports
 import rclpy
 
 from rclpy.node import Node
@@ -10,10 +10,10 @@ from rclpy.qos import QoSProfile
     # For sending velocity commands to the robot: Twist
     # For the sensors: Imu, LaserScan, and Odometry
 # Check the online documentation to fill in the lines below
-from ... import Twist
+from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Imu
-from ... import LaserScan
-from ... import Odometry
+from sensor_msgs.msg import LaserScan
+from nav_msgs.msg import Odometry
 
 from rclpy.time import Time
 
@@ -40,7 +40,7 @@ class motion_executioner(Node):
         self.laser_initialized=False
         
         # TODO Part 3: Create a publisher to send velocity commands by setting the proper parameters in (...)
-        self.vel_publisher=self.create_publisher(...)
+        self.vel_publisher=self.create_publisher(Twist, '/cmd_vel', 10)
                 
         # loggers
         self.imu_logger=Logger('imu_content_'+str(motion_types[motion_type])+'.csv', headers=["acc_x", "acc_y", "angular_z", "stamp"])
@@ -48,20 +48,20 @@ class motion_executioner(Node):
         self.laser_logger=Logger('laser_content_'+str(motion_types[motion_type])+'.csv', headers=["ranges", "angle_increment", "stamp"])
         
         # TODO Part 3: Create the QoS profile by setting the proper parameters in (...)
-        qos=QoSProfile(...)
+        #qos=QoSProfile()
 
         # TODO Part 5: Create below the subscription to the topics corresponding to the respective sensors
         # IMU subscription
         
-        ...
+        self.create_subscription(Imu, '/imu', self.imu_callback, 10)
         
         # ENCODER subscription
 
-        ...
+        self.create_subscription(Odometry, '/odom', self.odom_callback, 10)
         
         # LaserScan subscription 
         
-        ...
+        self.create_subscription(LaserScan, '/scan', self.laser_callback, 10)
         
         self.create_timer(0.1, self.timer_callback)
 
@@ -73,12 +73,22 @@ class motion_executioner(Node):
     # You can save the needed fields into a list, and pass the list to the log_values function in utilities.py
 
     def imu_callback(self, imu_msg: Imu):
-        ...    # log imu msgs
+        timestamp = Time.from_msg(imu_msg.header.stamp) .nanoseconds   # log imu msgs
+        
         
     def odom_callback(self, odom_msg: Odometry):
         
-        ... # log odom msgs
+        timestamp = Time.from_msg(odom_msg.header.stamp) .nanoseconds # log odom msgs
                 
+        odom_orientation=odom_msg.pose.pose.orientation
+        odom_x_pos = odom_msg.pose.pose.position.x
+        odom_y_pos = odom_msg.pose.pose.position.y
+
+        print(f'Message Timestamp = {timestamp}')
+        print(f'Current Robot Orientation = {odom_orientation}')
+        print(f'Current Robot X Position = {odom_x_pos}')
+        print(f'Current Robot Y Position = {odom_y_pos}')
+        
     def laser_callback(self, laser_msg: LaserScan):
         
         ... # log laser msgs with position msg at that time
