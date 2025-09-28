@@ -10,7 +10,7 @@ from rclpy.qos import QoSProfile
     # For sending velocity commands to the robot: Twist
     # For the sensors: Imu, LaserScan, and Odometry
 # Check the online documentation to fill in the lines below
-
+ 
 from geometry_msgs.msg import Twist # for sending velocity commands to the robot found from terminal commands
 from sensor_msgs.msg import Imu
 from sensor_msgs.msg import LaserScan # for reading laser data found from terminal commands
