@@ -114,7 +114,7 @@ class motion_executioner(Node):
         timestamp = Time.from_msg(laser_msg.header.stamp) .nanoseconds #get time stamp in nanoseconds
 
         laser_ranges=laser_msg.ranges #to record laser ranges
-        laser_angle_increment = laser_msg.angle_increment
+        laser_angle_increment = laser_msg.angle_increment #to record laser angle increment
 
         self.laser_logger.log_values([laser_ranges, laser_angle_increment, timestamp]) # logging the list of message values to be used in utilities.py
 
@@ -129,7 +129,7 @@ class motion_executioner(Node):
         if self.odom_initialized and self.laser_initialized and self.imu_initialized:
             self.successful_init=True
             
-        # if not self.successful_init:
+        # if not self.successful_init: #TA in lab told us to comment this section out
         #     return
         
         cmd_vel_msg=Twist()
