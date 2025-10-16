@@ -47,17 +47,17 @@ class localization(Node):
                 history=1,
                 depth=10
             )
-        else:
+        #else:
             
-            odom_qos = QoSProfile(
-                reliability=QoSReliabilityPolicy.FoundVal,
-                durability=QoSDurabilityPolicy.FoundVal,
-                history=QoSHistoryPolicy.FoundVal,
-                depth=FoundVal
-            )
+        #    odom_qos = QoSProfile(
+        #        reliability=QoSReliabilityPolicy.FoundVal,
+        #        durability=QoSDurabilityPolicy.FoundVal,
+        #        history=QoSHistoryPolicy.FoundVal,
+        #        depth=FoundVal
+        #    )
         
 
-        odom_qos=...
+        #odom_qos=...
         
         self.loc_logger=Logger("robot_pose.csv", ["x", "y", "theta", "stamp"])
         self.pose=None
@@ -77,7 +77,7 @@ class localization(Node):
         # TODO Part 3: Read x,y, theta, and record the stamp
         
         #Part3 code modified below
-        timestamp = Time.from_msg(pose_msg.header.stamp).nanoseconds  #get time stamp in nanoseconds
+        timestamp = pose_msg.header.stamp  #get time stamp in nanoseconds
         odom_x_pos = pose_msg.pose.pose.position.x #to record odometry x position
         odom_y_pos = pose_msg.pose.pose.position.y #to record odometry y position
         q = pose_msg.pose.pose.orientation
@@ -86,8 +86,10 @@ class localization(Node):
         self.pose=[odom_x_pos, odom_y_pos, theta, timestamp]
 
         # Log the data
-        self.loc_logger.log_values([self.pose[0], self.pose[1], self.pose[2], self.pose[3]])
+        self.loc_logger.log_values([self.pose[0], self.pose[1], self.pose[2], Time.from_msg(self.pose[3]).nanoseconds])
     
+        
+
     def getPose(self):
         return self.pose
 

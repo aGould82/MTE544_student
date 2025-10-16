@@ -10,7 +10,7 @@ from rclpy import init, spin, spin_once
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
 
-from rclpy.qos import QoSProfile
+from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 from nav_msgs.msg import Odometry as odom
 
 from localization import localization, rawSensor
@@ -18,8 +18,8 @@ from localization import localization, rawSensor
 from planner import TRAJECTORY_PLANNER, POINT_PLANNER, planner
 from controller import controller, trajectoryController
 
-DISTANCE_TOLERANCE=0
-ANGLE_TOLERANCE=0
+DISTANCE_TOLERANCE=2
+ANGLE_TOLERANCE=2
 
 # You may add any other imports you may need/want to use below
 # import ...
@@ -33,6 +33,7 @@ class decision_maker(Node):
 
         #TODO Part 4: Create a publisher for the topic responsible for robot's motion
         self.publisher=self.create_publisher(Twist, '/cmd_vel', 10) #publisher responsible for robots motion
+        
 
         publishing_period=1/rate
         
@@ -41,7 +42,7 @@ class decision_maker(Node):
     
         if motion_type == POINT_PLANNER:
             self.controller=controller(klp=0.2, klv=0.5, kap=0.8, kav=0.6)
-            self.planner=planner(POINT_PLANNER)    
+            self.planner=planner(POINT_PLANNER)   
     
     
         elif motion_type==TRAJECTORY_PLANNER:
@@ -118,7 +119,7 @@ def main(args=None):
 
     USING_SIM = True
         #ros2 topic info /odom --verbose # run this command in terminal to get the values for both sim and real robot
-    from rclpy.qos import QoSProfile, QosReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
+    #from rclpy.qos import QoSProfile, QosReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 
     if USING_SIM:
             odom_qos = QoSProfile(
@@ -127,22 +128,22 @@ def main(args=None):
                 history=1,
                 depth=10
     )
-    else:
-            odom_qos = QoSProfile(
-                reliability=QoSReliabilityPolicy.FoundVal,
-                durability=QoSDurabilityPolicy.FoundVal,
-                history=QoSHistoryPolicy.FoundVal,
-                depth=FoundVal
-    )
+    #else:
+    #        odom_qos = QoSProfile(
+    #            reliability=QoSReliabilityPolicy.FoundVal,
+    #            durability=QoSDurabilityPolicy.FoundVal,
+    #            history=QoSHistoryPolicy.FoundVal,
+    #            depth=FoundVal
+    #)
         
     
     odom_qos=QoSProfile(reliability=2, durability=2, history=1, depth=10)
     
     # TODO Part 4: instantiate the decision_maker with the proper parameters for moving the robot
     if args.motion.lower() == "point":
-        DM=decision_maker(...)
+        DM=decision_maker(Twist, '/cmd_vel', odom_qos, planner(POINT_PLANNER).plan([1.0, 2.0]), 10, POINT_PLANNER)
     elif args.motion.lower() == "trajectory":
-        DM=decision_maker(...)
+        DM=decision_maker(Twist, '/cmd_vel', odom_qos, planner(TRAJECTORY_PLANNER).plan([1.0, 2.0]), 10, TRAJECTORY_PLANNER)
     else:
         print("invalid motion type", file=sys.stderr)        
     
