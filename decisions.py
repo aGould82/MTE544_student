@@ -99,6 +99,8 @@ class decision_maker(Node):
         velocity, yaw_rate = self.controller.vel_request(self.localizer.getPose(), self.goal, True)
 
         #TODO Part 4: Publish the velocity to move the robot
+        vel_msg.linear.x = float(velocity)
+        vel_msg.angular.z = float(yaw_rate)
         self.publisher.publish(vel_msg) 
 
 import argparse
