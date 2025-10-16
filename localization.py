@@ -22,7 +22,7 @@ class localization(Node):
 
         # Process below when we have the program running:
 
-        # qos=QoSProfile(reliability=2, durability=2, history=1, depth=10) # Lab 1 Example
+        qos=QoSProfile(reliability=2, durability=2, history=1, depth=10) # Lab 1 Example
 
         # need to run the following in terminal: ros2 topic info /odom --verbose
         # will receive reliability, durability, history and depth values for both simulation and real robot
