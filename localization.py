@@ -7,7 +7,7 @@ from rclpy.node import Node
 from rclpy.qos import QoSProfile
 from nav_msgs.msg import Odometry as odom
 
-from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy, HistoryPolicy
+from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
 
 from rclpy import init, spin, shutdown
 
@@ -24,15 +24,10 @@ class localization(Node):
 
         # Process below when we have the program running:
 
-        qos=QoSProfile(reliability=2, durability=2, history=1, depth=10) # Lab 1 Example
-
         # need to run the following in terminal: ros2 topic info /odom --verbose
         # will receive reliability, durability, history and depth values for both simulation and real robot
 
         # The code below sets the qos profile based on the data retrieved from the terminal command above
-
-        # from rclpy.qos import QoSProfile, QosReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
-        # odom_qos = QoSProfile(reliability = QosReliabilityPolicy.VAL, durability = QosDurabilityPolicy.VAL, history = QoSHistoryPolicy.VAL, depth = VAL)
 
         #Part3 code modified below
         
@@ -46,7 +41,7 @@ class localization(Node):
             odom_qos = QoSProfile(
                 reliability=ReliabilityPolicy.RELIABLE,
                 durability=DurabilityPolicy.VOLATILE,
-                history=HistoryPolicy.KEEP_LAST,
+                history=1,
                 depth=10
             )
         #else:
@@ -103,7 +98,7 @@ class localization(Node):
 def main(args=None):
     print("3")
     init(args=args)
-    node = localization(rawSensor)
+    node = localization()
     spin(node)
     #node.destroy_node() # Don't need to add
     #shutdown() # Don't need to add

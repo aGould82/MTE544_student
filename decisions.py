@@ -10,7 +10,7 @@ from rclpy import init, spin, spin_once
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
 
-from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy, HistoryPolicy
+from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
 from nav_msgs.msg import Odometry as odom
 
 from localization import localization, rawSensor
@@ -59,7 +59,7 @@ class decision_maker(Node):
         # Instantiate the planner
         # NOTE: goalPoint is used only for the pointPlanner
         self.goal=self.planner.plan(goalPoint)
-        print("2")
+        
         self.create_timer(publishing_period, self.timerCallback)
         
 
@@ -70,7 +70,7 @@ class decision_maker(Node):
         # Remember that this file is already running the decision_maker node.
         #Part3 code modified below
         
-        spin_once(self.localizer,timeout_sec=0.0) # run the localization file, without timeout it will keep running forever without response (timeout_sec=0)
+        spin_once(self.localizer,timeout_sec=0.0)
       
         if self.localizer.getPose()  is  None:
             print("waiting for odom msgs ....")
@@ -79,13 +79,13 @@ class decision_maker(Node):
         vel_msg=Twist()
         linear_error = calculate_linear_error(self.localizer.getPose(), self.goal)
         angular_error = calculate_angular_error(self.localizer.getPose(), self.goal)
-        print("test")
+        
         # TODO Part 3: Check if you reached the goal
         #Part3 code modified below
         if type(self.goal) == list:
-            reached_goal= (linear_error < DISTANCE_TOLERANCE) and (abs(angular_error) < ANGLE_TOLERANCE)
+            reached_goal= (linear_error < DISTANCE_TOLERANCE) and (abs(angular_error) < ANGLE_TOLERANCE) # For trajectory planner
         else: 
-            reached_goal= (linear_error < DISTANCE_TOLERANCE) #Not 100% on this maybe set to false?
+            reached_goal= (linear_error < DISTANCE_TOLERANCE) # For point planner 
         
 
         if reached_goal:
@@ -113,7 +113,7 @@ import argparse
 
 
 def main(args=None):
-    #print("main")
+
     init()
     print("5")
     # TODO Part 3: You migh need to change the QoS profile based on whether you're using the real robot or in simulation.
@@ -130,7 +130,7 @@ def main(args=None):
         odom_qos = QoSProfile(
             reliability=ReliabilityPolicy.RELIABLE,
             durability=DurabilityPolicy.VOLATILE,
-            history=HistoryPolicy.KEEP_LAST,
+            history=1,
             depth=10
         )
     #else:
