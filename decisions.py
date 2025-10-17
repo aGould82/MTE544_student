@@ -21,6 +21,7 @@ from controller import controller, trajectoryController
 DISTANCE_TOLERANCE=0.05
 ANGLE_TOLERANCE=0.10
 
+
 # You may add any other imports you may need/want to use below
 # import ...
 
@@ -55,12 +56,16 @@ class decision_maker(Node):
 
         # Instantiate the localization, use rawSensor for now  
         self.localizer=localization(rawSensor)
+        
+        
+
 
         # Instantiate the planner
         # NOTE: goalPoint is used only for the pointPlanner
         self.goal=self.planner.plan(goalPoint)
         
         self.create_timer(publishing_period, self.timerCallback)
+        
         
 
 
@@ -157,7 +162,9 @@ def main(args=None):
     try:
         spin(DM)
     except SystemExit:
+        
         print(f"reached there successfully {DM.localizer.pose}")
+
 
 
 if __name__=="__main__":
