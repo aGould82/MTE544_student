@@ -26,16 +26,17 @@ class controller:
 
 
         linear_vel=self.PID_linear.update([e_lin, pose[3]], status)
+        print("linear_vel:", linear_vel)
         angular_vel=self.PID_angular.update([e_ang, pose[3]], status)
+        print("angular_vel:", angular_vel)
         
         # TODO Part 4: Add saturation limits for the robot linear and angular velocity (hint: you can use np.clip function)
-        max_lin_vel = 0.3 # 0.22 for sim
-        min_lin_vel = -0.3
-        linear_vel = np.clip(linear_vel, max_lin_vel, min_lin_vel)
+        max_lin_vel = 0.22 # 0.22 for sim 0.3 real
+        
+        linear_vel = np.clip(linear_vel, -max_lin_vel, max_lin_vel)
 
-        max_ang_vel = 1.9 # 2.84 for sim
-        min_ang_vel = -1.9
-        angular_vel= np.clip(angular_vel, max_lin_vel, min_lin_vel)
+        max_ang_vel = 2.84 # 2.84 for sim 1.9 real
+        angular_vel= np.clip(angular_vel, -max_ang_vel, max_ang_vel)
         
         return linear_vel, angular_vel
     

@@ -7,6 +7,8 @@ from rclpy.node import Node
 from rclpy.qos import QoSProfile
 from nav_msgs.msg import Odometry as odom
 
+from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy, HistoryPolicy
+
 from rclpy import init, spin, shutdown
 
 rawSensor = 0
@@ -42,9 +44,9 @@ class localization(Node):
 
         if USING_SIM:
             odom_qos = QoSProfile(
-                reliability=2,
-                durability=2,
-                history=1,
+                reliability=ReliabilityPolicy.RELIABLE,
+                durability=DurabilityPolicy.VOLATILE,
+                history=HistoryPolicy.KEEP_LAST,
                 depth=10
             )
         #else:
@@ -99,12 +101,12 @@ class localization(Node):
 #Part3 code modified below
 
 def main(args=None):
-    
+    print("3")
     init(args=args)
-    node = localization()
+    node = localization(rawSensor)
     spin(node)
-    node.destroy_node() # Don't need to add
-    shutdown() # Don't need to add
+    #node.destroy_node() # Don't need to add
+    #shutdown() # Don't need to add
 
 if __name__ == "__main__":
     main()
