@@ -62,8 +62,12 @@ class trajectoryController(controller):
 
         # TODO Part 5: Add saturation limits for the robot linear and angular velocity (hint: you can use np.clip function)
 
-        linear_vel = ... 
-        angular_vel= ... 
+        max_lin_vel = 0.22 # 0.22 for sim 0.3 real
+        
+        linear_vel = np.clip(linear_vel, -max_lin_vel, max_lin_vel)
+
+        max_ang_vel = 2.84 # 2.84 for sim 1.9 real
+        angular_vel= np.clip(angular_vel, -max_ang_vel, max_ang_vel) 
         
         return linear_vel, angular_vel
 
