@@ -66,10 +66,10 @@ class PID_ctrl:
             # for example dt=0.1 overwriting the calculation          
             
             # TODO Part 5: calculate the error dot 
-            prev_error = self.history[i-1][0]
-            curr_error = self.history[i][0]
-            if dt > 0:
-                error_dot += (curr_error - prev_error) / dt
+            prev_error = self.history[i-1][0]#find previous error
+            curr_error = self.history[i][0] #find current error
+            if dt > 0: #avoid division by zero
+                error_dot += (curr_error - prev_error) / dt#derivative error calculation
                 
         #print("Error Dot:", error_dot)
         error_dot/=len(self.history)
@@ -79,10 +79,10 @@ class PID_ctrl:
         sum_=0
         for hist in self.history:
             # TODO Part 5: Gather the integration
-            sum_+= hist[0]
+            sum_+= hist[0] #caculate sum of errors for integral
             pass
         
-        error_int=sum_*dt_avg
+        error_int=sum_*dt_avg #integral error calculation
         #print("Error Int:", error_int)
         
         # TODO Part 4: Log your errors
@@ -91,17 +91,17 @@ class PID_ctrl:
         
         # TODO Part 4: Implement the control law of P-controller
         if self.type == P:
-            return self.kp*latest_error # complete
+            return self.kp*latest_error #return of P controller
         
         # TODO Part 5: Implement the control law corresponding to each type of controller
         elif self.type == PD:
             pass
-            return self.kp * latest_error + self.kv * error_dot
+            return self.kp * latest_error + self.kv * error_dot #return of PD controller
         
         elif self.type == PI:
             pass
-            return self.kp * latest_error + self.ki * error_int
+            return self.kp * latest_error + self.ki * error_int #return of PI controller
         
         elif self.type == PID:
             pass
-            return self.kp * latest_error + self.kv * error_dot + self.ki * error_int
+            return self.kp * latest_error + self.kv * error_dot + self.ki * error_int#return of PID controller

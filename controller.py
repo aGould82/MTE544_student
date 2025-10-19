@@ -8,7 +8,7 @@ M_PI=3.1415926535
 
 P=0; PD=1; PI=2; PID=3
 
-goal = None
+goal = None # global variable to store the current goal point for trajectory controller
 
 class controller:
     
@@ -35,10 +35,10 @@ class controller:
         # TODO Part 4: Add saturation limits for the robot linear and angular velocity (hint: you can use np.clip function)
         max_lin_vel = 0.22 # 0.22 for sim 0.3 real
         
-        linear_vel = np.clip(linear_vel, -max_lin_vel, max_lin_vel)
+        linear_vel = np.clip(linear_vel, -max_lin_vel, max_lin_vel) #clipping linear velocity for values outside the range
 
         max_ang_vel = 2.84 # 2.84 for sim 1.9 real
-        angular_vel= np.clip(angular_vel, -max_ang_vel, max_ang_vel)
+        angular_vel= np.clip(angular_vel, -max_ang_vel, max_ang_vel)#clipping angular velocity for values outside the range
         
         return linear_vel, angular_vel
     
@@ -52,12 +52,13 @@ class trajectoryController(controller):
     def vel_request(self, pose, listGoals, status):
         
         finalGoal=listGoals[-1]
+        #we had trouble robot reaching the final goal for trajectory so we created the current goal global variable to use
         global goal
-        if goal!=finalGoal:
+        if goal!=finalGoal: #check if the current goal is equal to the final goal if it is do not update the goal
             goal=self.lookFarFor(pose, listGoals)
         
         
-        print("Current Goal:", goal)
+        print("Current Goal:", goal)#print statments for testing
         print("Final Goal:", finalGoal)
         
         e_lin=calculate_linear_error(pose, finalGoal)
@@ -71,10 +72,10 @@ class trajectoryController(controller):
 
         max_lin_vel = 0.22 # 0.22 for sim 0.3 real
         
-        linear_vel = np.clip(linear_vel, -max_lin_vel, max_lin_vel)
+        linear_vel = np.clip(linear_vel, -max_lin_vel, max_lin_vel)#clipping linear velocity for values outside the range
 
         max_ang_vel = 2.84 # 2.84 for sim 1.9 real
-        angular_vel= np.clip(angular_vel, -max_ang_vel, max_ang_vel) 
+        angular_vel= np.clip(angular_vel, -max_ang_vel, max_ang_vel) #clipping angular velocity for values outside the range
         
         return linear_vel, angular_vel
 
