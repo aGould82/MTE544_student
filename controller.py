@@ -8,6 +8,8 @@ M_PI=3.1415926535
 
 P=0; PD=1; PI=2; PID=3
 
+goal = None
+
 class controller:
     
     
@@ -26,9 +28,9 @@ class controller:
 
 
         linear_vel=self.PID_linear.update([e_lin, pose[3]], status)
-        print("linear_vel:", linear_vel)
+        #print("linear_vel:", linear_vel)
         angular_vel=self.PID_angular.update([e_ang, pose[3]], status)
-        print("angular_vel:", angular_vel)
+        #print("angular_vel:", angular_vel)
         
         # TODO Part 4: Add saturation limits for the robot linear and angular velocity (hint: you can use np.clip function)
         max_lin_vel = 0.22 # 0.22 for sim 0.3 real
@@ -49,9 +51,14 @@ class trajectoryController(controller):
     
     def vel_request(self, pose, listGoals, status):
         
-        goal=self.lookFarFor(pose, listGoals)
-        
         finalGoal=listGoals[-1]
+        global goal
+        if goal!=finalGoal:
+            goal=self.lookFarFor(pose, listGoals)
+        
+        
+        print("Current Goal:", goal)
+        print("Final Goal:", finalGoal)
         
         e_lin=calculate_linear_error(pose, finalGoal)
         e_ang=calculate_angular_error(pose, goal)

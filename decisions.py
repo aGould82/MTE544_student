@@ -82,9 +82,15 @@ class decision_maker(Node):
             return
 
         vel_msg=Twist()
-        linear_error = calculate_linear_error(self.localizer.getPose(), self.goal)
-        angular_error = calculate_angular_error(self.localizer.getPose(), self.goal)
-        
+        if type(self.goal) == list:
+            final_goal=self.goal[-1]
+        else:
+            final_goal=self.goal
+        linear_error = calculate_linear_error(self.localizer.getPose(), final_goal)
+        angular_error = calculate_angular_error(self.localizer.getPose(), final_goal)
+        print("Linear Error:", linear_error)
+        print("Angular Error:", angular_error)
+
         # TODO Part 3: Check if you reached the goal
         #Part3 code modified below
         if type(self.goal) == list:
@@ -108,9 +114,9 @@ class decision_maker(Node):
 
         #TODO Part 4: Publish the velocity to move the robot
         vel_msg.linear.x = float(velocity)
-        print("velocity:", velocity)
+        #print("velocity:", velocity)
         vel_msg.angular.z = float(yaw_rate)
-        print("yaw_rate:", yaw_rate)
+        #print("yaw_rate:", yaw_rate)
         
         self.publisher.publish(vel_msg) 
 
@@ -120,7 +126,6 @@ import argparse
 def main(args=None):
 
     init()
-    print("5")
     # TODO Part 3: You migh need to change the QoS profile based on whether you're using the real robot or in simulation.
     # Remember to define your QoS profile based on the information available in "ros2 topic info /odom --verbose" as explained in Tutorial 3
     #Part3 code modified below

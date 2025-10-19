@@ -71,7 +71,7 @@ class PID_ctrl:
             if dt > 0:
                 error_dot += (curr_error - prev_error) / dt
                 
-        print("Error Dot:", error_dot)
+        #print("Error Dot:", error_dot)
         error_dot/=len(self.history)
         dt_avg/=len(self.history)
         
@@ -83,7 +83,7 @@ class PID_ctrl:
             pass
         
         error_int=sum_*dt_avg
-        print("Error Int:", error_int)
+        #print("Error Int:", error_int)
         
         # TODO Part 4: Log your errors
         timestamp = Time.from_msg(stamp).nanoseconds  #get time stamp in nanoseconds
