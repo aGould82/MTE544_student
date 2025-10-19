@@ -85,14 +85,13 @@ class FileReader:
 
 # TODO Part 3: Implement the conversion from Quaternion to Euler Angles
 def euler_from_quaternion(quat):
-    #Part3 code modified below
 
     """
     Convert quaternion (w in last place) to euler roll, pitch, yaw.
     quat = [x, y, z, w]
     Same as from Lab 1
     """
-    # just unpack yaw
+    # This part is done the same as in Lab 1
     [x, y, z, w] = quat #get x, y, z and w from input
     yaw = atan2(2*(w*z + x*y), 1 - 2*(y*y + z*z)) #convert x, y, z and w to yaw
 
@@ -107,7 +106,7 @@ def calculate_linear_error(current_pose, goal_pose):
     # Remember that current_pose = [x,y, theta, time stamp] and goal_pose = [x,y]
     # Remember to use the Euclidean distance to calculate the error.
 
-    error_linear= sqrt((goal_pose[0]-current_pose[0])**2 + (goal_pose[1]-current_pose[1])**2) #linear error calculation using euclidean distance
+    error_linear = sqrt((goal_pose[0]-current_pose[0])**2 + (goal_pose[1]-current_pose[1])**2) #linear error calculation using euclidean distance
     return error_linear
 
 #TODO Part 4: Implement the calculation of the angular error
@@ -118,12 +117,13 @@ def calculate_angular_error(current_pose, goal_pose):
     # Use atan2 to find the desired orientation
     # Remember that this function returns the difference in orientation between where the robot currently faces and where it should face to reach the goal
 
-    desired_yaw = atan2(goal_pose[1]-current_pose[1], goal_pose[0]-current_pose[0])#angular error calculation using atan2
-    current_yaw = current_pose[2]
-    error_angular = desired_yaw - current_yaw
+    desired_yaw = atan2(goal_pose[1]-current_pose[1], goal_pose[0]-current_pose[0]) # Desired Yaw calculation using atan2
+    current_yaw = current_pose[2] # Current Yaw from current pose
+    error_angular = desired_yaw - current_yaw # Angular error calculation
 
     # Remember to handle the cases where the angular error might exceed the range [-π, π]
 
+    # Error handling for angles greater than pi or less than -pi
     if error_angular > M_PI:
         error_angular = error_angular - (2 * M_PI)
     elif error_angular < -M_PI:
