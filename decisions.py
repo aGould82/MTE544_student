@@ -26,6 +26,7 @@ ANGLE_TOLERANCE=0.10 # This is the constant value we used for the angular tolera
 # import ...
 
 
+
 class decision_maker(Node):
     
     def __init__(self, publisher_msg, publishing_topic, qos_publisher, goalPoint, rate=10, motion_type=POINT_PLANNER):
@@ -61,7 +62,6 @@ class decision_maker(Node):
         
         
 
-
         # Instantiate the planner
         # NOTE: goalPoint is used only for the pointPlanner
         self.goal=self.planner.plan(goalPoint)
@@ -75,9 +75,8 @@ class decision_maker(Node):
         
         # TODO Part 3: Run the localization node
         # Remember that this file is already running the decision_maker node.
-        #Part3 code modified below
         
-        spin_once(self.localizer,timeout_sec=0.0)
+        spin_once(self.localizer, timeout_sec=0.0) #Running the localization node once
       
         if self.localizer.getPose()  is  None:
             print("waiting for odom msgs ....")
@@ -94,11 +93,11 @@ class decision_maker(Node):
         print("Angular Error:", angular_error)
 
         # TODO Part 3: Check if you reached the goal
-        #Part3 code modified below
+
         if type(self.goal) == list:
-            reached_goal= (linear_error < DISTANCE_TOLERANCE) and (abs(angular_error) < ANGLE_TOLERANCE) # For trajectory planner
+            reached_goal = (linear_error < DISTANCE_TOLERANCE) and (abs(angular_error) < ANGLE_TOLERANCE) # Checks if within linear and angular tolerances
         else: 
-            reached_goal= (linear_error < DISTANCE_TOLERANCE) # For point planner 
+            reached_goal = (linear_error < DISTANCE_TOLERANCE) # Linear error less than tolerance
         
 
         if reached_goal:
@@ -109,8 +108,8 @@ class decision_maker(Node):
             self.controller.PID_linear.logger.save_log()
             
             #TODO Part 3: exit the spin
-            #Part3 code modified below
-            raise SystemExit
+
+            raise SystemExit #Exception has been raised to exit the spin once goal is reached
         
         velocity, yaw_rate = self.controller.vel_request(self.localizer.getPose(), self.goal, True)
 
@@ -130,31 +129,25 @@ def main(args=None):
     init()
     # TODO Part 3: You migh need to change the QoS profile based on whether you're using the real robot or in simulation.
     # Remember to define your QoS profile based on the information available in "ros2 topic info /odom --verbose" as explained in Tutorial 3
-    #Part3 code modified below
+
+    USING_SIM = True # Boolean variable to switch between sim and real robot
     
-        #Can use the following logic after doing the initial search for the qos profile values based on sim or real
+    #ros2 topic info /odom --verbose # run this command in terminal to get the values for both sim and real robot
 
-    USING_SIM = True
-        #ros2 topic info /odom --verbose # run this command in terminal to get the values for both sim and real robot
-    #from rclpy.qos import QoSProfile, QosReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
-
-    if USING_SIM:
+    if USING_SIM: # QoS profile for simulation (variables set accordinging to terminal command output)
         odom_qos = QoSProfile(
             reliability=ReliabilityPolicy.RELIABLE,
             durability=DurabilityPolicy.VOLATILE,
             history=1,
             depth=10
         )
-    #else:
+    #else: # QoS profile for real robot (these variables will be used during the lab when USING_SIM is set to False)
     #        odom_qos = QoSProfile(
     #            reliability=QoSReliabilityPolicy.FoundVal,
     #            durability=QoSDurabilityPolicy.FoundVal,
     #            history=QoSHistoryPolicy.FoundVal,
     #            depth=FoundVal
     #)
-        
-    
-    odom_qos=QoSProfile(reliability=2, durability=2, history=1, depth=10)
     
     # TODO Part 4: instantiate the decision_maker with the proper parameters for moving the robot
     if args.motion.lower() == "point":
