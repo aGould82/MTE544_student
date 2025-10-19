@@ -18,8 +18,8 @@ from localization import localization, rawSensor
 from planner import TRAJECTORY_PLANNER, POINT_PLANNER, planner
 from controller import controller, trajectoryController
 
-DISTANCE_TOLERANCE=0.05
-ANGLE_TOLERANCE=0.10
+DISTANCE_TOLERANCE=0.05 # This is the constant value we used for the linear distance tolerance compared to the goal point
+ANGLE_TOLERANCE=0.10 # This is the constant value we used for the angular tolerance compared to the goal point
 
 
 # You may add any other imports you may need/want to use below
@@ -33,7 +33,7 @@ class decision_maker(Node):
         super().__init__("decision_maker")
 
         #TODO Part 4: Create a publisher for the topic responsible for robot's motion
-        self.publisher=self.create_publisher(Twist, '/cmd_vel', 10) #publisher responsible for robots motion
+        self.publisher=self.create_publisher(Twist, '/cmd_vel', 10) #Created a publisher responsible for the robots motion
         
 
         publishing_period=1/rate
@@ -41,6 +41,8 @@ class decision_maker(Node):
         # Instantiate the controller
         # TODO Part 5: Tune your parameters here
     
+        # We left these values as provided to us for now and plan to tune them on the real robot in the lab
+
         if motion_type == POINT_PLANNER:
             self.controller=controller(klp=0.2, klv=0.5, kap=0.8, kav=0.6)
             self.planner=planner(POINT_PLANNER)   
@@ -55,7 +57,7 @@ class decision_maker(Node):
 
 
         # Instantiate the localization, use rawSensor for now  
-        self.localizer=localization(rawSensor)
+        self.localizer=localization(rawSensor) # Create a class variable based on rawSensor for the localization
         
         
 
@@ -113,12 +115,12 @@ class decision_maker(Node):
         velocity, yaw_rate = self.controller.vel_request(self.localizer.getPose(), self.goal, True)
 
         #TODO Part 4: Publish the velocity to move the robot
-        vel_msg.linear.x = float(velocity)
-        #print("velocity:", velocity)
-        vel_msg.angular.z = float(yaw_rate)
-        #print("yaw_rate:", yaw_rate)
+        vel_msg.linear.x = float(velocity) # Add the velocity to the linear variable of the overall velocity message
+        #print("velocity:", velocity) # Optional test print for debugging
+        vel_msg.angular.z = float(yaw_rate) # Add the yaw to the angular variable of the overall velocity message
+        #print("yaw_rate:", yaw_rate) # Optional test print for debugging
         
-        self.publisher.publish(vel_msg) 
+        self.publisher.publish(vel_msg) # Publish the full velocity package to move the robot (as in lab 1)
 
 import argparse
 
@@ -156,12 +158,11 @@ def main(args=None):
     
     # TODO Part 4: instantiate the decision_maker with the proper parameters for moving the robot
     if args.motion.lower() == "point":
-        DM=decision_maker(Twist, '/cmd_vel', odom_qos, planner(POINT_PLANNER).plan(), 10, POINT_PLANNER)
+        DM=decision_maker(Twist, '/cmd_vel', odom_qos, planner(POINT_PLANNER).plan(), 10, POINT_PLANNER) # Call decision maker class with the required inputs for the point motion
     elif args.motion.lower() == "trajectory":
-        DM=decision_maker(Twist, '/cmd_vel', odom_qos, planner(TRAJECTORY_PLANNER).plan(), 10, TRAJECTORY_PLANNER)
+        DM=decision_maker(Twist, '/cmd_vel', odom_qos, planner(TRAJECTORY_PLANNER).plan(), 10, TRAJECTORY_PLANNER) # Call decision maker class with the required inputs for the trajectory motion
     else:
-        print("invalid motion type", file=sys.stderr)        
-    
+        print("invalid motion type", file=sys.stderr)
     
     
     try:
