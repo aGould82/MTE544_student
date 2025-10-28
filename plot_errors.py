@@ -1,3 +1,6 @@
+# This file was edited to have the appropriate titles, legends, colours, etc to meet the needs of the 
+# plot requirements
+
 import matplotlib.pyplot as plt
 from utilities import FileReader
 
