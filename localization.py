@@ -32,6 +32,8 @@ class localization(Node):
                 depth=10
             )
         #else: # Setting qos profile for real robot (these variables will be used during the lab when USING_SIM is set to False)
+        # Since we did not get the chance to work on the real robot due to the robohub issue, this was not set for this lab but
+        # can easily be set by running the proper command in terminal when connected to the robot
             
         #    odom_qos = QoSProfile(
         #        reliability=QoSReliabilityPolicy.FoundVal,
