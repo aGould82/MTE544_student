@@ -133,7 +133,7 @@ def main(args=None):
     USING_SIM = True # Boolean variable to switch between sim and real robot
     
     #ros2 topic info /odom --verbose # run this command in terminal to get the values for both sim and real robot
-
+    
     if USING_SIM: # QoS profile for simulation (variables set accordinging to terminal command output)
         odom_qos = QoSProfile(
             reliability=ReliabilityPolicy.RELIABLE,
@@ -142,6 +142,9 @@ def main(args=None):
             depth=10
         )
     #else: # QoS profile for real robot (these variables will be used during the lab when USING_SIM is set to False)
+    # Since we did not get the chance to work on the real robot due to the robohub issue, this was not set for this lab but
+    # can easily be set by running the proper command in terminal when connected to the robot
+    
     #        odom_qos = QoSProfile(
     #            reliability=QoSReliabilityPolicy.FoundVal,
     #            durability=QoSDurabilityPolicy.FoundVal,
