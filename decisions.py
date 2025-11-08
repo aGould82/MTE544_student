@@ -28,6 +28,7 @@ from geometry_msgs.msg import PoseStamped
 
 import time
 
+
 class decision_maker(Node):
     
     
@@ -46,10 +47,10 @@ class decision_maker(Node):
         self.reachThreshold=0.1
 
         # TODO part 5: call the proper types
-        self.localizer=localization(...)
+        self.localizer=localization(particlesFilter)
         
         if motion_type==POINT_PLANNER:
-            self.controller=controller(klp=0.05, klv=0.0, kap=0.8, kav=0.0)      
+            self.controller=controller(klp=0.2, klv=0.5, kap=0.8, kav=0.6)      
             self.planner=planner(POINT_PLANNER)
 
         
@@ -97,7 +98,6 @@ class decision_maker(Node):
         if self.localizer.getPose() is  None:
             print("waiting for odom msgs ....")
             return
-        
         
         vel_msg=Twist()
         
