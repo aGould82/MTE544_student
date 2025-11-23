@@ -48,7 +48,7 @@ def return_path(current_node, maze):
 
 
 def search(maze, start, end):
-    #maze = maze.copy().T
+    #maze = maze.copy().T #this commented out to fix a circling issue with the robot
 
     """
         Returns a list of tuples as a path from the given start to the given end in the given maze
